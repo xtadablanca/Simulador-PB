@@ -362,29 +362,6 @@ footer strong{color:var(--pb-purple);}
         </div>
       </div>
     </div>
-    <div style="margin-top:12px;">
-      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-        <input type="checkbox" id="chk-vendido" onchange="toggleVendido(this)"
-          style="width:18px;height:18px;cursor:pointer;accent-color:#dc2626;">
-        <div>
-          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;color:#dc2626;">
-            🔴 Gestionar lotes vendidos
-          </div>
-          <div style="font-size:10px;color:#aaa;margin-top:2px;">
-            Marca un lote como VENDIDO para que deje de aparecer en la simulación
-          </div>
-        </div>
-      </label>
-      <div id="vendido-badge" style="display:none;margin-top:6px;background:#fef2f2;border:1.5px solid #dc2626;border-radius:10px;padding:10px 14px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="font-size:15px;">🔴</span>
-          <div style="flex:1;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;color:#dc2626;">Gestión de vendidos activa</div>
-          <button onclick="desactivarVendido()" style="padding:4px 10px;border-radius:7px;border:1.5px solid #dc2626;background:white;color:#dc2626;font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;">✕</button>
-        </div>
-        <div style="font-size:9px;color:#888;margin-bottom:6px;">Usa el botón <strong>"🔴 Marcar VENDIDO"</strong> junto a cada lote seleccionado. Lotes vendidos en este proyecto:</div>
-        <div id="vendidos-lista"><span style="font-size:10px;color:#aaa;">No hay lotes marcados como vendidos en este proyecto.</span></div>
-      </div>
-    </div>
     <div style="margin-top:16px;border-top:1px dashed #e0e0e0;padding-top:14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <span style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;color:var(--pb-dark);text-transform:uppercase;letter-spacing:.5px;">Lotes a cotizar (hasta 3)</span>
@@ -421,8 +398,6 @@ const DATA={
       {id:"A3",area:303.66,obs:"CERCA AV INGRESO",usd:22657,pen:79300},
       {id:"A4",area:320.52,obs:"CERCA AV INGRESO",usd:24000,pen:84000},
       {id:"A8",area:309.97,obs:"—",usd:22857,pen:80000},
-      {id:"B2",area:300,obs:"CERCA AV INGRESO",usd:21857,pen:76500},
-      {id:"B3",area:300,obs:"CERCA AV INGRESO",usd:21857,pen:78500},
       {id:"B4",area:300,obs:"CERCA AV INGRESO",usd:22857,pen:80000},
       {id:"B8",area:325.96,obs:"—",usd:24307,pen:85076},
       {id:"B9",area:355.39,obs:"—",usd:26400,pen:92400},
@@ -662,9 +637,6 @@ function fmtFecha(d){
 // ── ESTADO ──
 let activeProject=null, moneda='PEN';
 let etapa1Desbloqueada=false;
-let modoVendido=false;
-const lotesVendidos={bdn:[],pdm:[]};
-const PASS_VENDIDO='1708';
 let loteSlots=[];
 const maxSlots=3;
 const PASS_ETAPA1='1301';
@@ -712,7 +684,6 @@ function selectProject(p){
   addLoteSlot();
   document.getElementById('card-container').innerHTML='<div class="empty-state"><p>Selecciona un lote en el panel</p></div>';
   const eb=document.getElementById('export-btn-wrap'); if(eb) eb.remove();
-  if(modoVendido) actualizarListaVendidos();
 }
 
 function addLoteSlot(){
@@ -738,70 +709,20 @@ function renderSlotSelector(idx){
   let el=document.getElementById('slot-'+idx);
   if(!el){el=document.createElement('div');el.id='slot-'+idx;container.appendChild(el);}
   const proj=DATA[activeProject];
-  const vendidos=lotesVendidos[activeProject]||[];
   const opts=proj.lots.filter(function(l){
     if(activeProject==='pdm' && l.etapa===1 && !etapa1Desbloqueada) return false;
-    if(vendidos.indexOf(l.id)>=0 && loteSlots[idx].lotId!==l.id) return false;
     return true;
   }).map(function(l){
     const label=activeProject==='pdm'?'Etapa '+l.etapa+' — Lote '+l.id+' ('+l.area+' m²)':'Lote '+l.id+' ('+l.area+' m²)';
     return '<option value="'+l.id+'"'+(loteSlots[idx].lotId===l.id?' selected':'')+'>'+label+'</option>';
   }).join('');
-  let vendidoBtn='';
-  if(modoVendido && loteSlots[idx].lotId){
-    vendidoBtn='<button onclick="marcarVendido('+idx+')" style="padding:5px 12px;border-radius:8px;border:1.5px solid #dc2626;background:#dc2626;color:white;cursor:pointer;font-size:11px;font-family:\'Montserrat\',sans-serif;font-weight:700;white-space:nowrap;">🔴 Marcar VENDIDO</button>';
-  }
   el.innerHTML='<div style="background:#f7f9fc;border-radius:12px;padding:12px 14px;margin-bottom:10px;border:1.5px solid #e0e0e0;">'
     +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'
     +'<div style="font-family:\'Montserrat\',sans-serif;font-weight:700;font-size:12px;color:var(--pb-dark);background:#e8e8f0;border-radius:20px;padding:3px 10px;">Lote '+(idx+1)+'</div>'
     +'<select style="flex:1;min-width:200px;" onchange="onSlotLotChange('+idx+',this.value)">'
     +'<option value="">— Selecciona un lote —</option>'+opts+'</select>'
-    +vendidoBtn
     +(idx>0?'<button onclick="removeLoteSlot('+idx+')" style="padding:5px 10px;border-radius:8px;border:1.5px solid #ddd;background:white;color:#aaa;cursor:pointer;font-size:11px;">✕</button>':'')
     +'</div></div>';
-}
-
-function marcarVendido(idx){
-  const lotId=loteSlots[idx].lotId;
-  if(!lotId) return;
-  if(!confirm('¿Marcar el Lote '+lotId+' como VENDIDO? Dejará de aparecer para cotizar.')) return;
-  if(!lotesVendidos[activeProject]) lotesVendidos[activeProject]=[];
-  if(lotesVendidos[activeProject].indexOf(lotId)<0) lotesVendidos[activeProject].push(lotId);
-  loteSlots[idx].lotId='';
-  loteSlots[idx].ST={inicialMonto:0,precioCustom:0,opciones:[24,48,120]};
-  loteSlots.forEach(function(_,i){renderSlotSelector(i);});
-  renderAllCards();
-  actualizarListaVendidos();
-}
-function desmarcarVendido(proj,lotId){
-  const arr=lotesVendidos[proj]; if(!arr) return;
-  const i=arr.indexOf(lotId); if(i>=0) arr.splice(i,1);
-  loteSlots.forEach(function(_,idx){renderSlotSelector(idx);});
-  actualizarListaVendidos();
-}
-function actualizarListaVendidos(){
-  const cont=document.getElementById('vendidos-lista'); if(!cont) return;
-  const arr=lotesVendidos[activeProject]||[];
-  if(!arr.length){cont.innerHTML='<span style="font-size:10px;color:#aaa;">No hay lotes marcados como vendidos en este proyecto.</span>';return;}
-  cont.innerHTML=arr.map(function(id){return '<span style="display:inline-flex;align-items:center;gap:5px;background:#fef2f2;border:1.5px solid #dc2626;border-radius:20px;padding:3px 10px;margin:2px;font-size:11px;font-family:\'Montserrat\',sans-serif;font-weight:700;color:#dc2626;">🔴 '+id+' <span onclick="desmarcarVendido(\''+activeProject+'\',\''+id+'\')" style="cursor:pointer;font-weight:900;color:#991b1b;">✕</span></span>';}).join('');
-}
-function toggleVendido(chk){
-  if(chk.checked){
-    const pass=prompt('Ingresa la contraseña para gestionar lotes vendidos:');
-    if(pass===PASS_VENDIDO){
-      modoVendido=true;
-      document.getElementById('vendido-badge').style.display='block';
-      loteSlots.forEach(function(_,i){renderSlotSelector(i);});
-      actualizarListaVendidos();
-    } else { alert('Contraseña incorrecta.'); chk.checked=false; }
-  } else { desactivarVendido(); }
-}
-function desactivarVendido(){
-  modoVendido=false;
-  const chk=document.getElementById('chk-vendido');
-  if(chk) chk.checked=false;
-  document.getElementById('vendido-badge').style.display='none';
-  loteSlots.forEach(function(_,i){renderSlotSelector(i);});
 }
 
 function onSlotLotChange(idx,lotId){
