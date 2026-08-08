@@ -341,6 +341,50 @@ footer strong{color:var(--pb-purple);}
         </select>
       </div>
     </div>
+    <div style="margin-top:12px;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="checkbox" id="chk-etapa1" onchange="toggleEtapa1(this)"
+          style="width:18px;height:18px;cursor:pointer;accent-color:#d97706;">
+        <div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;color:#d97706;">
+            🔓 Desbloquear 1era etapa (Puerta del Mar)
+          </div>
+          <div style="font-size:10px;color:#aaa;margin-top:2px;">
+            Permite visualizar y simular los lotes de la primera etapa
+          </div>
+        </div>
+      </label>
+      <div id="etapa1-badge" style="display:none;margin-top:6px;background:#fffbeb;border:1.5px solid #d97706;border-radius:10px;padding:8px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:15px;">🔓</span>
+          <div style="flex:1;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;color:#d97706;">1era etapa desbloqueada</div>
+          <button onclick="desactivarEtapa1()" style="padding:4px 10px;border-radius:7px;border:1.5px solid #d97706;background:white;color:#d97706;font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;">✕</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <input type="checkbox" id="chk-vendido" onchange="toggleVendido(this)"
+          style="width:18px;height:18px;cursor:pointer;accent-color:#dc2626;">
+        <div>
+          <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;color:#dc2626;">
+            🔴 Gestionar lotes vendidos
+          </div>
+          <div style="font-size:10px;color:#aaa;margin-top:2px;">
+            Marca un lote como VENDIDO para que deje de aparecer en la simulación
+          </div>
+        </div>
+      </label>
+      <div id="vendido-badge" style="display:none;margin-top:6px;background:#fef2f2;border:1.5px solid #dc2626;border-radius:10px;padding:10px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:15px;">🔴</span>
+          <div style="flex:1;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;color:#dc2626;">Gestión de vendidos activa</div>
+          <button onclick="desactivarVendido()" style="padding:4px 10px;border-radius:7px;border:1.5px solid #dc2626;background:white;color:#dc2626;font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;">✕</button>
+        </div>
+        <div style="font-size:9px;color:#888;margin-bottom:6px;">Usa el botón <strong>"🔴 Marcar VENDIDO"</strong> junto a cada lote seleccionado. Lotes vendidos en este proyecto:</div>
+        <div id="vendidos-lista"><span style="font-size:10px;color:#aaa;">No hay lotes marcados como vendidos en este proyecto.</span></div>
+      </div>
+    </div>
     <div style="margin-top:16px;border-top:1px dashed #e0e0e0;padding-top:14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <span style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;color:var(--pb-dark);text-transform:uppercase;letter-spacing:.5px;">Lotes a cotizar (hasta 3)</span>
@@ -372,152 +416,228 @@ footer strong{color:var(--pb-purple);}
 const DATA={
   bdn:{name:"Brisas de Naylamp",location:"Lambayeque",theme:"bdn",
     lots:[
-      {id:"A1",area:305.51,obs:"CERCA AV INGRESO",usd:22760,pen:79660},
-      {id:"A2",area:300.79,obs:"CERCA AV INGRESO",usd:22408,pen:78428},
-      {id:"A3",area:303.66,obs:"CERCA AV INGRESO",usd:22625,pen:79188},
-      {id:"A4",area:320.52,obs:"CERCA AV INGRESO",usd:23880,pen:83580},
-      {id:"A8",area:309.97,obs:"—",usd:22010,pen:77035},
-      {id:"B2",area:300.0,obs:"CERCA AV INGRESO",usd:22350,pen:78225},
-      {id:"B3",area:300.0,obs:"CERCA AV INGRESO",usd:22350,pen:78225},
-      {id:"B4",area:300.0,obs:"CERCA AV INGRESO",usd:22350,pen:78225},
-      {id:"B8",area:325.96,obs:"—",usd:22818,pen:79863},
-      {id:"B9",area:355.39,obs:"—",usd:24878,pen:87073},
-      {id:"B10",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"B11",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"B13",area:300.0,obs:"CERCA AV INGRESO",usd:22350,pen:78225},
-      {id:"B14",area:300.0,obs:"CERCA AV INGRESO",usd:22350,pen:78225},
-      {id:"B15",area:300.0,obs:"CERCA AV INGRESO",usd:22350,pen:78225},
-      {id:"B16",area:300.0,obs:"ESQUINA AV INGRESO",usd:22800,pen:79800},
-      {id:"C3",area:300.0,obs:"B CERCA AV INGRESO",usd:21900,pen:76650},
-      {id:"C6",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"C7",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"C8",area:329.38,obs:"—",usd:23060,pen:80710},
-      {id:"C9",area:308.2,obs:"—",usd:21575,pen:75512},
-      {id:"C10",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"C11",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"C12",area:300.0,obs:"—",usd:21600,pen:75600},
-      {id:"C14",area:300.0,obs:"B CERCA AV INGRESO",usd:21900,pen:76650},
-      {id:"C15",area:300.0,obs:"B CERCA AV INGRESO",usd:21900,pen:76650},
-      {id:"C16",area:300.0,obs:"ESQUINA AV INGRESO",usd:22800,pen:79800},
-      {id:"D1",area:340.0,obs:"ESQUINA AV INGRESO",usd:25840,pen:90440},
-      {id:"D2",area:340.0,obs:"B CERCA AV INGRESO",usd:24820,pen:86870},
-      {id:"D3",area:340.0,obs:"B CERCA AV INGRESO",usd:24820,pen:86870},
-      {id:"D4",area:340.0,obs:"B CERCA AV INGRESO",usd:24820,pen:86870},
-      {id:"D5",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D6",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D7",area:332.1,obs:"—",usd:23247,pen:81364},
-      {id:"D8",area:310.66,obs:"—",usd:21747,pen:76114},
-      {id:"D9",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D10",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D11",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D12",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D13",area:340.0,obs:"—",usd:23800,pen:83300},
-      {id:"D14",area:340.0,obs:"ESQUINA AV INGRESO",usd:25840,pen:90440},
-      {id:"E2",area:347.08,obs:"—",usd:19000,pen:66500},
-      {id:"E3",area:304.85,obs:"—",usd:17000,pen:59500},
-      {id:"F2",area:301.45,obs:"—",usd:17000,pen:59500},
-      {id:"F3",area:300.87,obs:"—",usd:17000,pen:59500},
-      {id:"F4",area:307.34,obs:"—",usd:22744,pen:79604},
-      {id:"F5",area:335.48,obs:"—",usd:24993,pen:87476},
-      {id:"F7",area:343.88,obs:"—",usd:25619,pen:89666}
+      {id:"A1",area:305.51,obs:"CERCA AV INGRESO",usd:22857,pen:80000},
+      {id:"A2",area:300.79,obs:"CERCA AV INGRESO",usd:22429,pen:78500},
+      {id:"A3",area:303.66,obs:"CERCA AV INGRESO",usd:22657,pen:79300},
+      {id:"A4",area:320.52,obs:"CERCA AV INGRESO",usd:24000,pen:84000},
+      {id:"A8",area:309.97,obs:"—",usd:22857,pen:80000},
+      {id:"B2",area:300,obs:"CERCA AV INGRESO",usd:21857,pen:76500},
+      {id:"B3",area:300,obs:"CERCA AV INGRESO",usd:21857,pen:78500},
+      {id:"B4",area:300,obs:"CERCA AV INGRESO",usd:22857,pen:80000},
+      {id:"B8",area:325.96,obs:"—",usd:24307,pen:85076},
+      {id:"B9",area:355.39,obs:"—",usd:26400,pen:92400},
+      {id:"B10",area:300,obs:"—",usd:22286,pen:78000},
+      {id:"B11",area:300,obs:"—",usd:22286,pen:78000},
+      {id:"B13",area:300,obs:"CERCA AV INGRESO",usd:22286,pen:78000},
+      {id:"B14",area:300,obs:"CERCA AV INGRESO",usd:22571,pen:79000},
+      {id:"B15",area:300,obs:"CERCA AV INGRESO",usd:22571,pen:76500},
+      {id:"B16",area:300,obs:"ESQUINA AV INGRESO",usd:23000,pen:80500},
+      {id:"C3",area:300,obs:"B CERCA AV INGRESO",usd:22571,pen:79000},
+      {id:"C6",area:300,obs:"—",usd:22429,pen:78500},
+      {id:"C7",area:300,obs:"—",usd:22429,pen:78500},
+      {id:"C8",area:329.38,obs:"—",usd:24429,pen:85500},
+      {id:"C9",area:308.2,obs:"—",usd:22900,pen:80150},
+      {id:"C10",area:300,obs:"—",usd:22429,pen:78500},
+      {id:"C11",area:300,obs:"—",usd:22429,pen:78500},
+      {id:"C12",area:300,obs:"—",usd:22429,pen:78500},
+      {id:"C14",area:300,obs:"B CERCA AV INGRESO",usd:22571,pen:79000},
+      {id:"C15",area:300,obs:"B CERCA AV INGRESO",usd:22571,pen:79000},
+      {id:"C16",area:300,obs:"ESQUINA AV INGRESO",usd:23000,pen:80500},
+      {id:"D1",area:340,obs:"ESQUINA AV INGRESO",usd:26043,pen:91150},
+      {id:"D2",area:340,obs:"B CERCA AV INGRESO",usd:25571,pen:89500},
+      {id:"D3",area:340,obs:"B CERCA AV INGRESO",usd:25571,pen:89500},
+      {id:"D4",area:340,obs:"B CERCA AV INGRESO",usd:25354,pen:88740},
+      {id:"D5",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D6",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D7",area:332.1,obs:"—",usd:24686,pen:86400},
+      {id:"D8",area:310.66,obs:"—",usd:23086,pen:80800},
+      {id:"D9",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D10",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D11",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D12",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D13",area:340,obs:"—",usd:25257,pen:88400},
+      {id:"D14",area:340,obs:"ESQUINA AV INGRESO",usd:26043,pen:91150},
+      {id:"E2",area:347.08,obs:"—",usd:25783,pen:90241},
+      {id:"E3",area:304.85,obs:"—",usd:22429,pen:78500},
+      {id:"F1",area:350.43,obs:"—",usd:26032,pen:91112},
+      {id:"F2",area:301.45,obs:"—",usd:22857,pen:80000},
+      {id:"F3",area:300.87,obs:"—",usd:22857,pen:80000},
+      {id:"F4",area:307.34,obs:"—",usd:22857,pen:80000},
+      {id:"F5",area:335.48,obs:"—",usd:25000,pen:87500},
+      {id:"F7",area:343.88,obs:"—",usd:25620,pen:89670},
+      {id:"F9",area:300,obs:"—",usd:22857,pen:80000}
     ]},
   pdm:{name:"Puerta del Mar",location:"Pimentel",theme:"pdm",
     lots:[
-      {etapa:1,id:"D1",area:108.0,vista:"Esquina",frente:6.0,largo:18.0,usd:41998,pen:146993},
-      {etapa:1,id:"D2",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:41998,pen:146993},
-      {etapa:1,id:"D3",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:41998,pen:146993},
-      {etapa:1,id:"D4",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:41998,pen:146993},
-      {etapa:1,id:"E9",area:128.8,vista:"Esquina",frente:8.0,largo:16.1,usd:52283,pen:182990},
-      {etapa:1,id:"G8",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:33490,pen:117215},
-      {etapa:1,id:"G9",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:33490,pen:117215},
-      {etapa:1,id:"G21",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:33490,pen:117215},
-      {etapa:1,id:"G22",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:33490,pen:117215},
-      {etapa:2,id:"H1",area:112.5,vista:"Esquina",frente:7.5,largo:15.0,usd:36558,pen:127953},
-      {etapa:2,id:"H2",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H3",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H4",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H5",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H6",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H8",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H18",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H19",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H20",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H21",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H22",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H23",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H24",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H25",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H26",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H27",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H28",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"H29",area:112.5,vista:"Esquina",frente:7.5,largo:15.0,usd:36558,pen:127953},
-      {etapa:2,id:"I4",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"I5",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"I6",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"I7",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"I8",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"I9",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"I11",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"I12",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"I13",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"I14",area:108.0,vista:"Esquina",frente:6.0,largo:18.0,usd:36108,pen:126378},
-      {etapa:2,id:"J2",area:96.6,vista:"Calle",frente:6.0,largo:16.1,usd:30090,pen:105315},
-      {etapa:2,id:"J6",area:96.6,vista:"Calle",frente:6.0,largo:16.1,usd:30090,pen:105315},
-      {etapa:2,id:"K1",area:129.42,vista:"Esquina",frente:7.19,largo:18.0,usd:44880,pen:157080},
-      {etapa:2,id:"K2",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"K3",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"K4",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:36272,pen:126952},
-      {etapa:2,id:"K5",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:36272,pen:126952},
-      {etapa:2,id:"K6",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:36272,pen:126952},
-      {etapa:2,id:"K7",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:36272,pen:126952},
-      {etapa:2,id:"K8",area:108.0,vista:"Parque",frente:6.0,largo:18.0,usd:36272,pen:126952},
-      {etapa:2,id:"K9",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K10",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K11",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K12",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K13",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K14",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K15",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K16",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K17",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K18",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K19",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K20",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K21",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K22",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"K23",area:135.0,vista:"Esquina",frente:7.5,largo:18.0,usd:43720,pen:153020},
-      {etapa:2,id:"L2",area:120.0,vista:"Parque",frente:6.0,largo:20.0,usd:38946,pen:136311},
-      {etapa:2,id:"L3",area:120.0,vista:"Parque",frente:6.0,largo:20.0,usd:38946,pen:136311},
-      {etapa:2,id:"L4",area:120.0,vista:"Parque",frente:6.0,largo:20.0,usd:38946,pen:136311},
-      {etapa:2,id:"L5",area:120.0,vista:"Parque",frente:6.0,largo:20.0,usd:38946,pen:136311},
-      {etapa:2,id:"L6",area:120.0,vista:"Parque",frente:6.0,largo:20.0,usd:38946,pen:136311},
-      {etapa:2,id:"L8",area:103.2,vista:"Calle",frente:6.0,largo:17.2,usd:32148,pen:112518},
-      {etapa:2,id:"L9",area:103.2,vista:"Calle",frente:6.0,largo:17.2,usd:32148,pen:112518},
-      {etapa:2,id:"L10",area:103.2,vista:"Calle",frente:6.0,largo:17.2,usd:32148,pen:112518},
-      {etapa:2,id:"L11",area:103.2,vista:"Calle",frente:6.0,largo:17.2,usd:32148,pen:112518},
-      {etapa:2,id:"L12",area:137.6,vista:"Esquina",frente:8.0,largo:17.2,usd:46002,pen:161007},
-      {etapa:2,id:"L13",area:120.0,vista:"Calle",frente:6.0,largo:20.0,usd:37378,pen:130823},
-      {etapa:2,id:"L14",area:120.0,vista:"Calle",frente:6.0,largo:20.0,usd:37378,pen:130823},
-      {etapa:2,id:"L15",area:120.0,vista:"Calle",frente:6.0,largo:20.0,usd:37378,pen:130823},
-      {etapa:2,id:"L16",area:120.0,vista:"Calle",frente:6.0,largo:20.0,usd:37378,pen:130823},
-      {etapa:2,id:"L17",area:120.0,vista:"Calle",frente:6.0,largo:20.0,usd:37378,pen:130823},
-      {etapa:2,id:"L18",area:120.0,vista:"Esquina",frente:8.0,largo:15.0,usd:40216,pen:140756},
-      {etapa:2,id:"L19",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"L20",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"L21",area:90.0,vista:"Calle",frente:6.0,largo:15.0,usd:28050,pen:98175},
-      {etapa:2,id:"M1",area:108.0,vista:"Esquina",frente:6.0,largo:18.0,usd:35128,pen:122948},
-      {etapa:2,id:"M2",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M3",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M4",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M5",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M6",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M7",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M8",area:108.0,vista:"Calle",frente:6.0,largo:18.0,usd:33644,pen:117754},
-      {etapa:2,id:"M9",area:216.0,vista:"Calle",frente:12.0,largo:18.0,usd:67282,pen:235487},
-      {etapa:2,id:"M12",area:133.65,vista:"Esquina",frente:9.0,largo:16.71,usd:44704,pen:156464},
-      {etapa:2,id:"M13",area:126.4,vista:"Calle",frente:7.56,largo:16.71,usd:39374,pen:137809},
-      {etapa:2,id:"M14",area:126.4,vista:"Calle",frente:7.56,largo:16.71,usd:39374,pen:137809},
-      {etapa:2,id:"M15",area:133.65,vista:"Esquina",frente:8.0,largo:16.71,usd:43290,pen:151515}
+      {etapa:1,id:"A2",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"A3",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"A4",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"A5",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A13",area:120,vista:"Esquina",frente:8,largo:15,usd:45200,pen:158200},
+      {etapa:1,id:"A14",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A15",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A16",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A17",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A18",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A19",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A20",area:105,vista:"Calle",frente:7,largo:15,usd:38950,pen:136325},
+      {etapa:1,id:"A21",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"A22",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"A23",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"B3",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"B4",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"B5",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"B6",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"B7",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"B8",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"B9",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"B12",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"B13",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"C1",area:112.5,vista:"Esquina",frente:7.5,largo:15,usd:45750,pen:160125},
+      {etapa:1,id:"C2",area:117,vista:"Calle",frente:6,largo:19.5,usd:41300,pen:144550},
+      {etapa:1,id:"C3",area:117,vista:"Calle",frente:6,largo:19.5,usd:41300,pen:144550},
+      {etapa:1,id:"C4",area:117,vista:"Calle",frente:6,largo:19.5,usd:41300,pen:144550},
+      {etapa:1,id:"C5",area:117,vista:"Calle",frente:6,largo:19.5,usd:41300,pen:144550},
+      {etapa:1,id:"C9",area:120,vista:"Parque",frente:6,largo:20,usd:43000,pen:150500},
+      {etapa:1,id:"C10",area:120,vista:"Parque",frente:6,largo:20,usd:43000,pen:150500},
+      {etapa:1,id:"C15",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"D1",area:108,vista:"Esquina",frente:6,largo:18,usd:43000,pen:150500},
+      {etapa:1,id:"D2",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D3",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D4",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D5",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D6",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D7",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D8",area:108,vista:"Calle",frente:6,largo:18,usd:42000,pen:147000},
+      {etapa:1,id:"D10",area:107,vista:"Parque",frente:6,largo:18,usd:43300,pen:151550},
+      {etapa:1,id:"D11",area:108,vista:"Parque",frente:6,largo:18,usd:43300,pen:151550},
+      {etapa:1,id:"D12",area:108,vista:"Parque",frente:6,largo:18,usd:43300,pen:151550},
+      {etapa:1,id:"E9",area:128.8,vista:"Esquina",frente:8,largo:16.1,usd:52000,pen:182000},
+      {etapa:1,id:"F3",area:117,vista:"Parque",frente:6.5,largo:18,usd:44680,pen:156380},
+      {etapa:1,id:"F4",area:108,vista:"Parque",frente:6,largo:18,usd:41250,pen:144375},
+      {etapa:1,id:"F5",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F6",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F7",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F8",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F9",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F10",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F11",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F12",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"F13",area:108,vista:"Calle",frente:6,largo:18,usd:40040,pen:140140},
+      {etapa:1,id:"G1",area:112.5,vista:"Esquina",frente:7.5,largo:15,usd:43720,pen:153020},
+      {etapa:1,id:"G2",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G3",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G5",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G6",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G7",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G8",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G9",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G10",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G11",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G12",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G14",area:119.31,vista:"Esquina",frente:10.75,largo:11.1,usd:48490,pen:169715},
+      {etapa:1,id:"G15",area:94.34,vista:"Calle",frente:8.5,largo:11.1,usd:35070,pen:122745},
+      {etapa:1,id:"G17",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G18",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G19",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G20",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G21",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G22",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G23",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G24",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G25",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G26",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G27",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G28",area:90,vista:"Calle",frente:6,largo:15,usd:33500,pen:117250},
+      {etapa:1,id:"G29",area:112.5,vista:"Esquina",frente:7.5,largo:15,usd:43720,pen:153020},
+      {etapa:2,id:"H1",area:112.5,vista:"Esquina",frente:7.5,largo:15,usd:36560,pen:127960},
+      {etapa:2,id:"H2",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H3",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H4",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H5",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H6",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H7",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H8",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H18",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H19",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H20",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H21",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H22",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H23",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H24",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H25",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H26",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H27",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H28",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"H29",area:112.5,vista:"Esquina",frente:7.5,largo:15,usd:36560,pen:127960},
+      {etapa:2,id:"I4",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I5",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I6",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I7",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I8",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I9",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I10",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"I11",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"I12",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"I13",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"I14",area:108,vista:"Esquina",frente:6,largo:18,usd:36500,pen:127750},
+      {etapa:2,id:"J2",area:96.6,vista:"Calle",frente:6,largo:16.1,usd:30100,pen:105350},
+      {etapa:2,id:"J6",area:96.6,vista:"Calle",frente:6,largo:16.1,usd:30100,pen:105350},
+      {etapa:2,id:"K1",area:129.42,vista:"Esquina",frente:7.19,largo:18,usd:44880,pen:157080},
+      {etapa:2,id:"K2",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K3",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K4",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"K5",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"K6",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"K7",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"K8",area:108,vista:"Parque",frente:6,largo:18,usd:36250,pen:126875},
+      {etapa:2,id:"K9",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K10",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K11",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K12",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K13",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K14",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K15",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K16",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K17",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K18",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K19",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K20",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K21",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K22",area:108,vista:"Calle",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"K23",area:135,vista:"Esquina",frente:7.5,largo:18,usd:43720,pen:153020},
+      {etapa:2,id:"L2",area:120,vista:"Parque",frente:6,largo:20,usd:39000,pen:136500},
+      {etapa:2,id:"L3",area:120,vista:"Parque",frente:6,largo:20,usd:39000,pen:136500},
+      {etapa:2,id:"L4",area:120,vista:"Parque",frente:6,largo:20,usd:39000,pen:136500},
+      {etapa:2,id:"L5",area:120,vista:"Parque",frente:6,largo:20,usd:39000,pen:136500},
+      {etapa:2,id:"L6",area:120,vista:"Parque",frente:6,largo:20,usd:39000,pen:136500},
+      {etapa:2,id:"L8",area:103.2,vista:"Calle",frente:6,largo:17.2,usd:32150,pen:112525},
+      {etapa:2,id:"L9",area:103.2,vista:"Calle",frente:6,largo:17.2,usd:32150,pen:112525},
+      {etapa:2,id:"L10",area:103.2,vista:"Calle",frente:6,largo:17.2,usd:32150,pen:112525},
+      {etapa:2,id:"L11",area:103.2,vista:"Calle",frente:6,largo:17.2,usd:32150,pen:112525},
+      {etapa:2,id:"L12",area:137.6,vista:"Esquina",frente:8,largo:17.2,usd:46010,pen:161035},
+      {etapa:2,id:"L13",area:120,vista:"Calle",frente:6,largo:20,usd:37350,pen:130725},
+      {etapa:2,id:"L14",area:120,vista:"Calle",frente:6,largo:20,usd:37350,pen:130725},
+      {etapa:2,id:"L15",area:120,vista:"Calle",frente:6,largo:20,usd:37350,pen:130725},
+      {etapa:2,id:"L16",area:120,vista:"Calle",frente:6,largo:20,usd:37350,pen:130725},
+      {etapa:2,id:"L17",area:120,vista:"Calle",frente:6,largo:20,usd:37350,pen:130725},
+      {etapa:2,id:"L18",area:120,vista:"Esquina",frente:8,largo:15,usd:40220,pen:140770},
+      {etapa:2,id:"L19",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"L20",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"L21",area:90,vista:"Calle",frente:6,largo:15,usd:28150,pen:98525},
+      {etapa:2,id:"M1",area:108,vista:"Esquina",frente:6,largo:18,usd:35130,pen:122955},
+      {etapa:2,id:"M2",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M3",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M4",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M5",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M6",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M7",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M8",area:108,vista:"Calle",frente:6,largo:18,usd:33650,pen:117775},
+      {etapa:2,id:"M9",area:216,vista:"Calle",frente:12,largo:18,usd:66000,pen:231000},
+      {etapa:2,id:"M12",area:133.65,vista:"Esquina",frente:9,largo:16.71,usd:44710,pen:156485},
+      {etapa:2,id:"M13",area:126.4,vista:"Calle",frente:7.56,largo:16.71,usd:39380,pen:137830},
+      {etapa:2,id:"M14",area:126.4,vista:"Calle",frente:7.56,largo:16.71,usd:39380,pen:137830},
+      {etapa:2,id:"M15",area:133.65,vista:"Esquina",frente:8,largo:16.71,usd:43300,pen:151550}
     ]}
 };
 
@@ -541,8 +661,38 @@ function fmtFecha(d){
 
 // ── ESTADO ──
 let activeProject=null, moneda='PEN';
+let etapa1Desbloqueada=false;
+let modoVendido=false;
+const lotesVendidos={bdn:[],pdm:[]};
+const PASS_VENDIDO='1708';
 let loteSlots=[];
 const maxSlots=3;
+const PASS_ETAPA1='1301';
+
+function toggleEtapa1(chk){
+  if(chk.checked){
+    const pass=prompt('Ingresa la contraseña para desbloquear la 1era etapa:');
+    if(pass===PASS_ETAPA1){
+      etapa1Desbloqueada=true;
+      document.getElementById('etapa1-badge').style.display='block';
+      loteSlots.forEach(function(_,i){renderSlotSelector(i);});
+    } else { alert('Contraseña incorrecta.'); chk.checked=false; }
+  } else { desactivarEtapa1(); }
+}
+function desactivarEtapa1(){
+  etapa1Desbloqueada=false;
+  const chk=document.getElementById('chk-etapa1');
+  if(chk) chk.checked=false;
+  document.getElementById('etapa1-badge').style.display='none';
+  loteSlots.forEach(function(s){
+    if(s.lotId){
+      const lot=DATA.pdm&&DATA.pdm.lots.find(function(l){return l.id===s.lotId;});
+      if(activeProject==='pdm'&&lot&&lot.etapa===1){s.lotId='';s.ST={inicialMonto:0,precioCustom:0,opciones:[24,48,120]};}
+    }
+  });
+  loteSlots.forEach(function(_,i){renderSlotSelector(i);});
+  renderAllCards();
+}
 
 // cada slot: {lotId, ST:{inicialMonto, opciones:[m1,m2,m3]}}
 
@@ -562,6 +712,7 @@ function selectProject(p){
   addLoteSlot();
   document.getElementById('card-container').innerHTML='<div class="empty-state"><p>Selecciona un lote en el panel</p></div>';
   const eb=document.getElementById('export-btn-wrap'); if(eb) eb.remove();
+  if(modoVendido) actualizarListaVendidos();
 }
 
 function addLoteSlot(){
@@ -587,17 +738,70 @@ function renderSlotSelector(idx){
   let el=document.getElementById('slot-'+idx);
   if(!el){el=document.createElement('div');el.id='slot-'+idx;container.appendChild(el);}
   const proj=DATA[activeProject];
-  const opts=proj.lots.map(function(l){
+  const vendidos=lotesVendidos[activeProject]||[];
+  const opts=proj.lots.filter(function(l){
+    if(activeProject==='pdm' && l.etapa===1 && !etapa1Desbloqueada) return false;
+    if(vendidos.indexOf(l.id)>=0 && loteSlots[idx].lotId!==l.id) return false;
+    return true;
+  }).map(function(l){
     const label=activeProject==='pdm'?'Etapa '+l.etapa+' — Lote '+l.id+' ('+l.area+' m²)':'Lote '+l.id+' ('+l.area+' m²)';
     return '<option value="'+l.id+'"'+(loteSlots[idx].lotId===l.id?' selected':'')+'>'+label+'</option>';
   }).join('');
+  let vendidoBtn='';
+  if(modoVendido && loteSlots[idx].lotId){
+    vendidoBtn='<button onclick="marcarVendido('+idx+')" style="padding:5px 12px;border-radius:8px;border:1.5px solid #dc2626;background:#dc2626;color:white;cursor:pointer;font-size:11px;font-family:\'Montserrat\',sans-serif;font-weight:700;white-space:nowrap;">🔴 Marcar VENDIDO</button>';
+  }
   el.innerHTML='<div style="background:#f7f9fc;border-radius:12px;padding:12px 14px;margin-bottom:10px;border:1.5px solid #e0e0e0;">'
     +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'
     +'<div style="font-family:\'Montserrat\',sans-serif;font-weight:700;font-size:12px;color:var(--pb-dark);background:#e8e8f0;border-radius:20px;padding:3px 10px;">Lote '+(idx+1)+'</div>'
     +'<select style="flex:1;min-width:200px;" onchange="onSlotLotChange('+idx+',this.value)">'
     +'<option value="">— Selecciona un lote —</option>'+opts+'</select>'
+    +vendidoBtn
     +(idx>0?'<button onclick="removeLoteSlot('+idx+')" style="padding:5px 10px;border-radius:8px;border:1.5px solid #ddd;background:white;color:#aaa;cursor:pointer;font-size:11px;">✕</button>':'')
     +'</div></div>';
+}
+
+function marcarVendido(idx){
+  const lotId=loteSlots[idx].lotId;
+  if(!lotId) return;
+  if(!confirm('¿Marcar el Lote '+lotId+' como VENDIDO? Dejará de aparecer para cotizar.')) return;
+  if(!lotesVendidos[activeProject]) lotesVendidos[activeProject]=[];
+  if(lotesVendidos[activeProject].indexOf(lotId)<0) lotesVendidos[activeProject].push(lotId);
+  loteSlots[idx].lotId='';
+  loteSlots[idx].ST={inicialMonto:0,precioCustom:0,opciones:[24,48,120]};
+  loteSlots.forEach(function(_,i){renderSlotSelector(i);});
+  renderAllCards();
+  actualizarListaVendidos();
+}
+function desmarcarVendido(proj,lotId){
+  const arr=lotesVendidos[proj]; if(!arr) return;
+  const i=arr.indexOf(lotId); if(i>=0) arr.splice(i,1);
+  loteSlots.forEach(function(_,idx){renderSlotSelector(idx);});
+  actualizarListaVendidos();
+}
+function actualizarListaVendidos(){
+  const cont=document.getElementById('vendidos-lista'); if(!cont) return;
+  const arr=lotesVendidos[activeProject]||[];
+  if(!arr.length){cont.innerHTML='<span style="font-size:10px;color:#aaa;">No hay lotes marcados como vendidos en este proyecto.</span>';return;}
+  cont.innerHTML=arr.map(function(id){return '<span style="display:inline-flex;align-items:center;gap:5px;background:#fef2f2;border:1.5px solid #dc2626;border-radius:20px;padding:3px 10px;margin:2px;font-size:11px;font-family:\'Montserrat\',sans-serif;font-weight:700;color:#dc2626;">🔴 '+id+' <span onclick="desmarcarVendido(\''+activeProject+'\',\''+id+'\')" style="cursor:pointer;font-weight:900;color:#991b1b;">✕</span></span>';}).join('');
+}
+function toggleVendido(chk){
+  if(chk.checked){
+    const pass=prompt('Ingresa la contraseña para gestionar lotes vendidos:');
+    if(pass===PASS_VENDIDO){
+      modoVendido=true;
+      document.getElementById('vendido-badge').style.display='block';
+      loteSlots.forEach(function(_,i){renderSlotSelector(i);});
+      actualizarListaVendidos();
+    } else { alert('Contraseña incorrecta.'); chk.checked=false; }
+  } else { desactivarVendido(); }
+}
+function desactivarVendido(){
+  modoVendido=false;
+  const chk=document.getElementById('chk-vendido');
+  if(chk) chk.checked=false;
+  document.getElementById('vendido-badge').style.display='none';
+  loteSlots.forEach(function(_,i){renderSlotSelector(i);});
 }
 
 function onSlotLotChange(idx,lotId){
