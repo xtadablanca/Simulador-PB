@@ -338,6 +338,7 @@ footer strong{color:var(--pb-purple);}
           <option value="HUANCAS MUÑOZ MARIA KATHIA|932543587">Huancas Muñoz Maria Kathia</option>
           <option value="MEJIA CORTEZ MIRKO DAZU|956703298">Mejia Cortez Mirko Dazu</option>
           <option value="CHERO GASTULO JULIO ABEL|932475864">Chero Gastulo Julio Abel</option>
+          <option value="JOSE LUIS PALACIOS|954156896">Jose Luis Palacios</option>
         </select>
       </div>
     </div>
@@ -709,7 +710,9 @@ function renderSlotSelector(idx){
   if(!el){el=document.createElement('div');el.id='slot-'+idx;container.appendChild(el);}
   const proj=DATA[activeProject];
   const opts=proj.lots.filter(function(l){
-    if(activeProject==='pdm' && l.etapa===1 && !etapa1Desbloqueada) return false;
+    // Lotes de etapa 1 liberados individualmente (siempre cotizables sin desbloquear toda la etapa)
+    var lotesEtapa1Libres=['D1','D2','D3','D4','E9','G8','G9','G21','G22'];
+    if(activeProject==='pdm' && l.etapa===1 && !etapa1Desbloqueada && lotesEtapa1Libres.indexOf(l.id)<0) return false;
     return true;
   }).map(function(l){
     const label=activeProject==='pdm'?'Etapa '+l.etapa+' — Lote '+l.id+' ('+l.area+' m²)':'Lote '+l.id+' ('+l.area+' m²)';
